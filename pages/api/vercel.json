@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "pages/api/submit-form.ts": {
-      "runtime": "nodejs18.x"
-    }
-  }
-}
