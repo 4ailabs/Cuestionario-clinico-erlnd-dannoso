@@ -229,16 +229,16 @@ const removeMedicationRow = (index: number) => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 p-2 sm:p-4 md:p-6 lg:p-10">
-      <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-6 sm:mb-8 md:mb-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-800 tracking-tight px-2">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="max-w-6xl mx-auto">
+        <header className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 tracking-tight px-4">
             Cuestionario Integral
           </h1>
-          <p className="mt-2 text-base sm:text-lg text-teal-600 font-semibold px-2">Para Evaluación Nutricional</p>
+          <p className="mt-4 text-lg sm:text-xl text-teal-600 font-semibold px-4">Para Evaluación Nutricional</p>
         </header>
 
-        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-10">
           {/* Patient Info */}
           <Section title="Información del Paciente">
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1262,10 +1262,10 @@ const removeMedicationRow = (index: number) => {
             </Section>
 
 
-          <div className="mt-8 sm:mt-10 flex justify-center sm:justify-end">
+          <div className="mt-12 flex justify-center">
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-3 bg-teal-600 text-white font-bold rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-500/50 transform hover:-translate-y-0.5 transition-all duration-150 text-base sm:text-sm"
+                className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-4 bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold rounded-xl shadow-xl hover:from-teal-700 hover:to-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-500/50 transform hover:-translate-y-1 transition-all duration-300 text-lg sm:text-base"
               >
                 Enviar Cuestionario
               </button>

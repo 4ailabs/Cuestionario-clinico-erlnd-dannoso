@@ -13,8 +13,8 @@ interface InputFieldProps {
 }
 
 export const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, type = 'text', placeholder, unit, className }) => (
-  <div className={`flex flex-col ${className}`}>
-    <label htmlFor={name} className="mb-1 text-sm font-medium text-gray-700">{label}</label>
+  <div className={`flex flex-col space-y-2 ${className}`}>
+    <label htmlFor={name} className="text-sm font-semibold text-gray-700">{label}</label>
     <div className="relative">
       <input
         type={type}
@@ -23,9 +23,9 @@ export const InputField: React.FC<InputFieldProps> = ({ label, name, value, onCh
         value={value}
         onChange={e => onChange(e)}
         placeholder={placeholder}
-        className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition text-base"
+        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 text-base bg-white hover:border-gray-300"
       />
-      {unit && <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 text-sm">{unit}</span>}
+      {unit && <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 text-sm font-medium">{unit}</span>}
     </div>
   </div>
 );
