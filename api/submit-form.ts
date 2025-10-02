@@ -6,6 +6,17 @@ export default async function handler(req, res) {
   try {
     const formData = req.body;
     
+    // Verificar que las variables de entorno estén configuradas
+    if (!process.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY no está configurada');
+      return res.status(500).json({ message: 'Configuración del servidor incompleta' });
+    }
+    
+    if (!process.env.EMAIL_RECIPIENT) {
+      console.error('EMAIL_RECIPIENT no está configurada');
+      return res.status(500).json({ message: 'Email de destino no configurado' });
+    }
+    
     // Generar contenido del email
     const emailContent = generateEmailContent(formData);
     
@@ -17,21 +28,29 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'noreply@tu-dominio.com',
+        from: 'noreply@resend.dev', // Usar dominio de prueba de Resend
         to: [process.env.EMAIL_RECIPIENT],
-        subject: `Nuevo Cuestionario Integral - ${formData.patientInfo.patientName}`,
+        subject: `Nuevo Cuestionario Integral - ${formData.patientInfo?.patientName || 'Sin nombre'}`,
         html: emailContent,
       }),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send email');
+      const errorText = await response.text();
+      console.error('Error de Resend:', response.status, errorText);
+      throw new Error(`Error de Resend: ${response.status} - ${errorText}`);
     }
 
+    const result = await response.json();
+    console.log('Email enviado exitosamente:', result);
+    
     res.status(200).json({ message: 'Formulario enviado exitosamente' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ message: 'Error al enviar el formulario' });
+    res.status(500).json({ 
+      message: 'Error al enviar el formulario',
+      error: error.message 
+    });
   }
 }
 

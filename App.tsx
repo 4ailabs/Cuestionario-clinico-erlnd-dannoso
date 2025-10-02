@@ -94,6 +94,19 @@ const initialFormData: FormData = {
 const App: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
+  // Función para calcular IMC
+  const calculateBMI = useCallback((weight: string, height: string): string => {
+    const weightNum = parseFloat(weight);
+    const heightNum = parseFloat(height);
+    
+    if (weightNum > 0 && heightNum > 0) {
+      const heightInMeters = heightNum / 100;
+      const bmi = weightNum / (heightInMeters * heightInMeters);
+      return bmi.toFixed(1);
+    }
+    return '';
+  }, []);
+
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
@@ -127,9 +140,24 @@ const App: React.FC = () => {
         } else {
              current[keys[keys.length - 1]] = value;
         }
+        
+        // Calcular IMC automáticamente cuando se cambie peso o talla
+        if (name === 'section1.anthropometric.currentWeight' || name === 'section1.anthropometric.height') {
+          const currentWeight = name === 'section1.anthropometric.currentWeight' ? value : newState.section1.anthropometric.currentWeight;
+          const height = name === 'section1.anthropometric.height' ? value : newState.section1.anthropometric.height;
+          newState.section1.anthropometric.bmi = calculateBMI(currentWeight, height);
+        }
+        
+        // Calcular IMC pre-embarazo automáticamente cuando se cambie peso pre-embarazo o talla
+        if (name === 'section1.anthropometric.prePregnancyWeight' || name === 'section1.anthropometric.height') {
+          const prePregnancyWeight = name === 'section1.anthropometric.prePregnancyWeight' ? value : newState.section1.anthropometric.prePregnancyWeight;
+          const height = newState.section1.anthropometric.height;
+          newState.section1.anthropometric.prePregnancyBmi = calculateBMI(prePregnancyWeight, height);
+        }
+        
         return newState;
     });
-  }, []);
+  }, [calculateBMI]);
   
   const handleMedicationChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
