@@ -18,9 +18,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "RESEND_API_KEY": "@resend_api_key",
-    "EMAIL_RECIPIENT": "@email_recipient"
-  }
+  ]
 }

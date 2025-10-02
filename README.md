@@ -35,6 +35,7 @@ Una aplicación de formulario integral para la evaluación nutricional de pacien
    - Agrega las siguientes variables:
      - `RESEND_API_KEY`: Tu API key de Resend
      - `EMAIL_RECIPIENT`: El email donde quieres recibir los formularios
+   - Asegúrate de que estén habilitadas para Production, Preview y Development
 
 4. **Despliega en Vercel**:
    ```bash
