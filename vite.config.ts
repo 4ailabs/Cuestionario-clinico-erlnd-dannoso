@@ -10,6 +10,9 @@ export default defineConfig(({ mode }) => {
         host: '0.0.0.0',
       },
       plugins: [react()],
+      css: {
+        postcss: './postcss.config.js',
+      },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
