@@ -54,10 +54,6 @@ Una aplicación de formulario integral para la evaluación nutricional de pacien
 - `RESEND_API_KEY`: API key de Resend para envío de correos
 - `EMAIL_RECIPIENT`: Email donde se enviarán los formularios completados
 
-### Variables de entorno opcionales
-
-- `GEMINI_API_KEY`: Solo si planeas usar funcionalidades de IA
-
 ## Desarrollo local
 
 1. **Instala las dependencias**:
