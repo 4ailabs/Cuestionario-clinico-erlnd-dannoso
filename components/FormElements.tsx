@@ -23,9 +23,9 @@ export const InputField: React.FC<InputFieldProps> = ({ label, name, value, onCh
         value={value}
         onChange={e => onChange(e)}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+        className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition text-base"
       />
-      {unit && <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">{unit}</span>}
+      {unit && <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 text-sm">{unit}</span>}
     </div>
   </div>
 );
@@ -42,8 +42,8 @@ interface RadioGroupProps {
 
 export const RadioGroup: React.FC<RadioGroupProps> = ({ label, name, value, options, onChange, className }) => (
   <div className={className}>
-    <p className="mb-2 text-sm font-medium text-gray-700">{label}</p>
-    <div className="flex flex-wrap gap-x-6 gap-y-2">
+    <p className="mb-3 text-sm font-medium text-gray-700">{label}</p>
+    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-2">
       {options.map(option => (
         <div key={option.value} className="flex items-center">
           <input
@@ -52,9 +52,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({ label, name, value, opti
             name={name}
             value={option.value}
             checked={value === option.value}
-            // FIX: Wrap handler to satisfy strict function types.
             onChange={e => onChange(e)}
-            className="h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
+            className="h-5 w-5 sm:h-4 sm:w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
           />
           <label htmlFor={`${name}-${option.value}`} className="ml-2 block text-sm text-gray-800">{option.label}</label>
         </div>
@@ -75,8 +74,8 @@ interface CheckboxGroupProps {
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ label, name, values, options, onChange, className }) => (
   <div className={className}>
-    <p className="mb-2 text-sm font-medium text-gray-700">{label}</p>
-    <div className="flex flex-col gap-2">
+    <p className="mb-3 text-sm font-medium text-gray-700">{label}</p>
+    <div className="flex flex-col gap-3 sm:gap-2">
       {options.map(option => (
         <div key={option.value} className="flex items-center">
           <input
@@ -85,9 +84,8 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ label, name, value
             name={name}
             value={option.value}
             checked={values.includes(option.value)}
-            // FIX: Wrap handler to satisfy strict function types.
             onChange={e => onChange(e)}
-            className="h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+            className="h-5 w-5 sm:h-4 sm:w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
           />
           <label htmlFor={`${name}-${option.value}`} className="ml-2 block text-sm text-gray-800">{option.label}</label>
         </div>
@@ -113,9 +111,8 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, name, check
             id={name}
             name={name}
             checked={checked}
-            // FIX: Wrap handler to satisfy strict function types.
             onChange={e => onChange(e)}
-            className="h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+            className="h-5 w-5 sm:h-4 sm:w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
         />
         <label htmlFor={name} className="ml-2 block text-sm text-gray-800">{label}</label>
     </div>
@@ -140,11 +137,10 @@ export const TextareaField: React.FC<TextareaFieldProps> = ({ label, name, value
       id={name}
       name={name}
       value={value}
-      // FIX: Wrap handler to satisfy strict function types.
       onChange={e => onChange(e)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
+      className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition text-base resize-vertical"
     />
   </div>
 );
@@ -163,21 +159,20 @@ interface SliderFieldProps {
 
 export const SliderField: React.FC<SliderFieldProps> = ({ label, name, value, onChange, min = 0, max = 10, step = 1, className }) => (
   <div className={`flex flex-col ${className}`}>
-    <label htmlFor={name} className="mb-1 text-sm font-medium text-gray-700 flex justify-between">
-      <span>{label}</span>
-      <span className="font-bold text-teal-600 bg-teal-100 rounded-md px-2 py-0.5">{value}</span>
+    <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700 flex justify-between items-center">
+      <span className="flex-1">{label}</span>
+      <span className="font-bold text-teal-600 bg-teal-100 rounded-md px-2 py-1 text-sm ml-2">{value}</span>
     </label>
     <input
       type="range"
       id={name}
       name={name}
       value={value}
-      // FIX: Wrap handler to satisfy strict function types.
       onChange={e => onChange(e)}
       min={min}
       max={max}
       step={step}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
+      className="w-full h-3 sm:h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
     />
   </div>
 );
@@ -200,9 +195,8 @@ export const SelectField: React.FC<SelectFieldProps> = ({ label, name, value, on
       id={name}
       name={name}
       value={value}
-      // FIX: Wrap handler to satisfy strict function types.
       onChange={e => onChange(e)}
-      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition bg-white"
+      className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition bg-white text-base"
     >
       {options.map(option => (
         <option key={option.value} value={option.value}>{option.label}</option>

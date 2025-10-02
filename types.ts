@@ -647,45 +647,8 @@ export interface FormData {
           ceruloplasmin: string;
       }
   },
-  section14: {
-      physicianEvaluation: {
-          bloodPressure: string;
-          heartRate: string;
-          temperature: string;
-          respiratoryRate: string;
-          nutritionStatus: string;
-          hydration: string;
-          skin: string;
-          joints: string;
-          breastExam: string;
-      },
-      diagnosis: {
-          confirmed1: string;
-          confirmed2: string;
-          confirmed3: string;
-          confirmed4: string;
-          differential1: string;
-          differential2: string;
-      },
-      plan: {
-          labsToOrder: string[];
-          otherLabs: string;
-          labsDate: string;
-          followUpDate: string;
-          dietaryInterventions: string;
-          supplementProtocol: string;
-          referrals: string[];
-          otherReferral: string;
-          nextAppointment: string;
-          followUpFrequency: string;
-          monitoringPlan: string;
-          additionalNotes: string;
-      }
-  },
   consent: {
       patientSignature: string;
       patientDate: string;
-      physicianSignature: string;
-      physicianDate: string;
   }
 }

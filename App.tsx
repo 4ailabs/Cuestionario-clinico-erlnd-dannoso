@@ -88,12 +88,7 @@ const initialFormData: FormData = {
     thyroid: { date: '', tsh: '', freeT4: '', freeT3: '', tpoAb: '', tgAb: '' },
     other: { homocysteine: '', vitA: '', vitE: '', selenium: '', serumCopper: '', ceruloplasmin: '' },
   },
-  section14: {
-    physicianEvaluation: { bloodPressure: '', heartRate: '', temperature: '', respiratoryRate: '', nutritionStatus: '', hydration: '', skin: '', joints: '', breastExam: '' },
-    diagnosis: { confirmed1: '', confirmed2: '', confirmed3: '', confirmed4: '', differential1: '', differential2: '' },
-    plan: { labsToOrder: [], otherLabs: '', labsDate: '', followUpDate: '', dietaryInterventions: '', supplementProtocol: '', referrals: [], otherReferral: '', nextAppointment: '', followUpFrequency: '', monitoringPlan: '', additionalNotes: '' },
-  },
-  consent: { patientSignature: '', patientDate: '', physicianSignature: '', physicianDate: '' },
+  consent: { patientSignature: '', patientDate: '' },
 };
 
 const App: React.FC = () => {
@@ -177,10 +172,29 @@ const removeMedicationRow = (index: number) => {
 };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data Submitted: ", JSON.stringify(formData, null, 2));
-    alert("Cuestionario enviado. Revisa la consola para ver los datos.");
+    
+    try {
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('¡Cuestionario enviado exitosamente! Recibirás una confirmación por correo.');
+        // Opcional: resetear el formulario
+        // setFormData(initialFormData);
+      } else {
+        throw new Error('Error al enviar el formulario');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
+    }
   };
   
   const beightonScore = useMemo(() => {
@@ -215,16 +229,16 @@ const removeMedicationRow = (index: number) => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 p-4 sm:p-6 md:p-10">
+    <div className="min-h-screen bg-gray-50 text-gray-800 p-2 sm:p-4 md:p-6 lg:p-10">
       <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
-            Cuestionario Clínico Integral
+        <header className="text-center mb-6 sm:mb-8 md:mb-10">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-800 tracking-tight px-2">
+            Cuestionario Integral
           </h1>
-          <p className="mt-2 text-lg text-teal-600 font-semibold">Para Evaluación Nutricional</p>
+          <p className="mt-2 text-base sm:text-lg text-teal-600 font-semibold px-2">Para Evaluación Nutricional</p>
         </header>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* Patient Info */}
           <Section title="Información del Paciente">
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -317,9 +331,9 @@ const removeMedicationRow = (index: number) => {
                  )}
             </SubSection>
             <SubSection title="2.3 Manifestaciones articulares">
-                <div className="md:col-span-2 lg:col-span-3">
-                    <p className="text-sm font-medium text-gray-700 mb-2">Hipermovilidad articular (Escala de Beighton):</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 pl-4">
+                <div className="sm:col-span-2 lg:col-span-3">
+                    <p className="text-sm font-medium text-gray-700 mb-3">Hipermovilidad articular (Escala de Beighton):</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 pl-2 sm:pl-4">
                         <CheckboxField label="Pulgar a antebrazo (Derecha)" name="section2.articular.beightonThumbRight" checked={formData.section2.articular.beightonThumbRight} onChange={handleInputChange} />
                         <CheckboxField label="Pulgar a antebrazo (Izquierda)" name="section2.articular.beightonThumbLeft" checked={formData.section2.articular.beightonThumbLeft} onChange={handleInputChange} />
                         <CheckboxField label="Meñique > 90° (Derecha)" name="section2.articular.beightonPinkyRight" checked={formData.section2.articular.beightonPinkyRight} onChange={handleInputChange} />
@@ -331,11 +345,11 @@ const removeMedicationRow = (index: number) => {
                         <CheckboxField label="Palmas al suelo" name="section2.articular.beightonPalms" checked={formData.section2.articular.beightonPalms} onChange={handleInputChange} className="sm:col-span-2"/>
                     </div>
                 </div>
-                 <div className="flex items-center space-x-3 bg-teal-50 p-3 rounded-lg md:col-span-2 lg:col-span-3">
+                 <div className="flex items-center justify-between sm:justify-start sm:space-x-3 bg-teal-50 p-3 rounded-lg sm:col-span-2 lg:col-span-3">
                     <label className="text-sm font-bold text-teal-800">Puntaje Beighton total:</label>
                     <span className="text-lg font-bold text-teal-600">{beightonScore} / 9</span>
                  </div>
-                 <RadioGroup label="¿Ha experimentado dislocaciones articulares?" name="section2.articular.dislocations" value={formData.section2.articular.dislocations} onChange={handleInputChange} options={[{label: 'Sí', value: 'yes'}, {label: 'No', value: 'no'}]} className="md:col-span-3" />
+                 <RadioGroup label="¿Ha experimentado dislocaciones articulares?" name="section2.articular.dislocations" value={formData.section2.articular.dislocations} onChange={handleInputChange} options={[{label: 'Sí', value: 'yes'}, {label: 'No', value: 'no'}]} className="sm:col-span-2 lg:col-span-3" />
                  {formData.section2.articular.dislocations === 'yes' && (<>
                     <SelectField label="Hombros Frecuencia" name="section2.articular.shoulderDislocationFreq" value={formData.section2.articular.shoulderDislocationFreq} onChange={handleInputChange} options={[{label:'Nunca', value: 'Nunca'}, {label:'1-2 veces', value: '1-2'}, {label:'3-5 veces', value: '3-5'}, {label:'> 5 veces', value: '>5'}, {label:'Recurrente', value: 'recurrente'}]} />
                     <SelectField label="Rótulas Frecuencia" name="section2.articular.patellaDislocationFreq" value={formData.section2.articular.patellaDislocationFreq} onChange={handleInputChange} options={[{label:'Nunca', value: 'Nunca'}, {label:'1-2 veces', value: '1-2'}, {label:'3-5 veces', value: '3-5'}, {label:'> 5 veces', value: '>5'}, {label:'Recurrente', value: 'recurrente'}]} />
@@ -348,14 +362,14 @@ const removeMedicationRow = (index: number) => {
                  )}
             </SubSection>
             <SubSection title="2.4 Complicaciones y comorbilidades de EDS">
-                <div className="md:col-span-2 lg:col-span-3">
-                    <p className="text-sm font-medium text-gray-700 mb-2">¿Ha tenido alguna de las siguientes?</p>
-                    <div className="space-y-2">
+                <div className="sm:col-span-2 lg:col-span-3">
+                    <p className="text-sm font-medium text-gray-700 mb-3">¿Ha tenido alguna de las siguientes?</p>
+                    <div className="space-y-3 sm:space-y-2">
                         <CheckboxField label="Ruptura espontánea de órganos" name="section2.comorbidities.spontaneousOrganRupture" checked={formData.section2.comorbidities.spontaneousOrganRupture} onChange={handleInputChange}/>
                         <CheckboxField label="Prolapso de órganos pélvicos" name="section2.comorbidities.pelvicOrganProlapse" checked={formData.section2.comorbidities.pelvicOrganProlapse} onChange={handleInputChange}/>
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                            <CheckboxField label="Hernia" name="section2.comorbidities.hernia" checked={formData.section2.comorbidities.hernia} onChange={handleInputChange}/>
-                           {formData.section2.comorbidities.hernia && <InputField label="Especificar tipo" name="section2.comorbidities.herniaType" value={formData.section2.comorbidities.herniaType} onChange={handleInputChange} />}
+                           {formData.section2.comorbidities.hernia && <InputField label="Especificar tipo" name="section2.comorbidities.herniaType" value={formData.section2.comorbidities.herniaType} onChange={handleInputChange} className="sm:flex-1" />}
                         </div>
                         <CheckboxField label="Várices tempranas" name="section2.comorbidities.earlyVaricoseVeins" checked={formData.section2.comorbidities.earlyVaricoseVeins} onChange={handleInputChange}/>
                         <CheckboxField label="Síndrome de taquicardia postural ortostática (POTS)" name="section2.comorbidities.pots" checked={formData.section2.comorbidities.pots} onChange={handleInputChange}/>
@@ -782,22 +796,58 @@ const removeMedicationRow = (index: number) => {
                 <InputField label="Otras bebidas" name="section6.recall24h.otherDrinks" value={formData.section6.recall24h.otherDrinks} onChange={handleInputChange} />
               </SubSection>
               <SubSection title="6.3 Frecuencia de consumo de grupos alimentarios">
-                 {Object.keys(formData.section6.foodFrequency).map(key => (
-                     <SelectField
-                         key={key}
-                         label={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                         name={`section6.foodFrequency.${key}`}
-                         value={formData.section6.foodFrequency[key as keyof typeof formData.section6.foodFrequency]}
-                         onChange={handleInputChange}
-                         options={[
-                             { label: 'Seleccione frecuencia', value: '' },
-                             { label: 'Diario', value: 'daily' },
-                             { label: 'Semanal', value: 'weekly' },
-                             { label: 'Mensual', value: 'monthly' },
-                             { label: 'Raro/Nunca', value: 'rarely' },
-                         ]}
-                     />
-                 ))}
+                 {Object.keys(formData.section6.foodFrequency).map(key => {
+                     const foodLabels: { [key: string]: string } = {
+                         fish: 'Pescado',
+                         seafood: 'Mariscos',
+                         poultry: 'Aves de corral',
+                         redMeat: 'Carne roja',
+                         pork: 'Cerdo',
+                         eggs: 'Huevos',
+                         legumes: 'Legumbres',
+                         tofu: 'Tofu',
+                         milk: 'Leche',
+                         yogurt: 'Yogur',
+                         cheese: 'Queso',
+                         whiteBread: 'Pan blanco',
+                         wholeBread: 'Pan integral',
+                         whiteRice: 'Arroz blanco',
+                         brownRice: 'Arroz integral',
+                         pasta: 'Pasta',
+                         oats: 'Avena',
+                         cereals: 'Cereales',
+                         freshFruits: 'Frutas frescas',
+                         rawVeggies: 'Verduras crudas',
+                         cookedVeggies: 'Verduras cocidas',
+                         fruitJuices: 'Jugos de fruta',
+                         oliveOil: 'Aceite de oliva',
+                         otherOils: 'Otros aceites',
+                         butter: 'Mantequilla',
+                         avocado: 'Aguacate',
+                         nuts: 'Frutos secos',
+                         fastFood: 'Comida rápida',
+                         frozenMeals: 'Comidas congeladas',
+                         processedSnacks: 'Snacks procesados',
+                         sweets: 'Dulces',
+                         sugaryDrinks: 'Bebidas azucaradas'
+                     };
+                     return (
+                         <SelectField
+                             key={key}
+                             label={foodLabels[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                             name={`section6.foodFrequency.${key}`}
+                             value={formData.section6.foodFrequency[key as keyof typeof formData.section6.foodFrequency]}
+                             onChange={handleInputChange}
+                             options={[
+                                 { label: 'Seleccione frecuencia', value: '' },
+                                 { label: 'Diario', value: 'daily' },
+                                 { label: 'Semanal', value: 'weekly' },
+                                 { label: 'Mensual', value: 'monthly' },
+                                 { label: 'Raro/Nunca', value: 'rarely' },
+                             ]}
+                         />
+                     );
+                 })}
               </SubSection>
               <SubSection title="6.4 Restricciones y preferencias dietéticas">
                 <CheckboxGroup
@@ -1200,42 +1250,6 @@ const removeMedicationRow = (index: number) => {
                 </SubSection>
             </Section>
 
-             {/* Section 14 */}
-            <Section title="SECCIÓN 14: PARA SER COMPLETADO POR EL MÉDICO">
-                <SubSection title="14.1 Evaluación física">
-                    <InputField label="Presión arterial" name="section14.physicianEvaluation.bloodPressure" value={formData.section14.physicianEvaluation.bloodPressure} onChange={handleInputChange} unit="mmHg"/>
-                    <InputField label="Frecuencia cardíaca" name="section14.physicianEvaluation.heartRate" value={formData.section14.physicianEvaluation.heartRate} onChange={handleInputChange} unit="lpm"/>
-                    <InputField label="Temperatura" name="section14.physicianEvaluation.temperature" value={formData.section14.physicianEvaluation.temperature} onChange={handleInputChange} unit="°C"/>
-                    <InputField label="Frecuencia respiratoria" name="section14.physicianEvaluation.respiratoryRate" value={formData.section14.physicianEvaluation.respiratoryRate} onChange={handleInputChange} unit="rpm"/>
-                    <TextareaField label="Estado nutricional general" name="section14.physicianEvaluation.nutritionStatus" value={formData.section14.physicianEvaluation.nutritionStatus} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Hidratación" name="section14.physicianEvaluation.hydration" value={formData.section14.physicianEvaluation.hydration} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Piel" name="section14.physicianEvaluation.skin" value={formData.section14.physicianEvaluation.skin} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Articulaciones" name="section14.physicianEvaluation.joints" value={formData.section14.physicianEvaluation.joints} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Examen de mama" name="section14.physicianEvaluation.breastExam" value={formData.section14.physicianEvaluation.breastExam} onChange={handleInputChange} className="md:col-span-3"/>
-                </SubSection>
-                <SubSection title="14.2 Impresión diagnóstica">
-                    <InputField label="Diagnóstico confirmado 1" name="section14.diagnosis.confirmed1" value={formData.section14.diagnosis.confirmed1} onChange={handleInputChange} className="md:col-span-3"/>
-                    <InputField label="Diagnóstico confirmado 2" name="section14.diagnosis.confirmed2" value={formData.section14.diagnosis.confirmed2} onChange={handleInputChange} className="md:col-span-3"/>
-                    <InputField label="Diagnóstico confirmado 3" name="section14.diagnosis.confirmed3" value={formData.section14.diagnosis.confirmed3} onChange={handleInputChange} className="md:col-span-3"/>
-                    <InputField label="Diagnóstico confirmado 4" name="section14.diagnosis.confirmed4" value={formData.section14.diagnosis.confirmed4} onChange={handleInputChange} className="md:col-span-3"/>
-                    <InputField label="Diagnóstico diferencial 1" name="section14.diagnosis.differential1" value={formData.section14.diagnosis.differential1} onChange={handleInputChange} className="md:col-span-3"/>
-                    <InputField label="Diagnóstico diferencial 2" name="section14.diagnosis.differential2" value={formData.section14.diagnosis.differential2} onChange={handleInputChange} className="md:col-span-3"/>
-                </SubSection>
-                <SubSection title="14.3 Plan">
-                    <CheckboxGroup label="Laboratorios a solicitar" name="section14.plan.labsToOrder" values={formData.section14.plan.labsToOrder} onChange={handleInputChange} options={[{label:'Panel metabólico', value:'metabolic'}, {label:'Glucosa/Insulina/HbA1c', value:'glucose_panel'}, {label:'Perfil lipídico', value:'lipid'}, {label:'PCR/VSG', value:'inflammation'}, {label:'Perfil tiroideo', value:'thyroid'}, {label:'Vitamina D', value:'vit_d'}, {label:'B12/Folato', value:'b_vitamins'}, {label:'Panel de hierro', value:'iron'}, {label:'Magnesio RBC', value:'magnesium'}, {label:'Zinc sérico', value:'zinc'}, {label:'Homocisteína', value:'homocysteine'}]} className="md:col-span-3"/>
-                    <InputField label="Otros laboratorios" name="section14.plan.otherLabs" value={formData.section14.plan.otherLabs} onChange={handleInputChange}/>
-                    <InputField label="Fecha programada para labs" name="section14.plan.labsDate" type="date" value={formData.section14.plan.labsDate} onChange={handleInputChange}/>
-                    <InputField label="Fecha de seguimiento para revisar" name="section14.plan.followUpDate" type="date" value={formData.section14.plan.followUpDate} onChange={handleInputChange}/>
-                    <TextareaField label="Intervenciones dietéticas" name="section14.plan.dietaryInterventions" value={formData.section14.plan.dietaryInterventions} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Protocolo de suplementación" name="section14.plan.supplementProtocol" value={formData.section14.plan.supplementProtocol} onChange={handleInputChange} className="md:col-span-3"/>
-                    <TextareaField label="Notas adicionales del médico" name="section14.plan.additionalNotes" value={formData.section14.plan.additionalNotes} onChange={handleInputChange} className="md:col-span-3"/>
-                    <CheckboxGroup label="Referencias/interconsultas" name="section14.plan.referrals" values={formData.section14.plan.referrals} onChange={handleInputChange} options={[{label:'Nutricionista', value:'nutritionist'}, {label:'Endocrinólogo', value:'endo'}, {label:'Reumatólogo', value:'rheum'}, {label:'Genetista', value:'geneticist'}, {label:'Fisioterapeuta', value:'physio'}, {label:'Psicólogo', value:'psych'}, {label:'Consultor de lactancia', value:'lactation'}]} className="md:col-span-3"/>
-                    <InputField label="Otra referencia" name="section14.plan.otherReferral" value={formData.section14.plan.otherReferral} onChange={handleInputChange}/>
-                    <InputField label="Próxima cita" name="section14.plan.nextAppointment" type="date" value={formData.section14.plan.nextAppointment} onChange={handleInputChange}/>
-                    <InputField label="Frecuencia de seguimiento" name="section14.plan.followUpFrequency" value={formData.section14.plan.followUpFrequency} onChange={handleInputChange}/>
-                    <TextareaField label="Plan de monitoreo" name="section14.plan.monitoringPlan" value={formData.section14.plan.monitoringPlan} onChange={handleInputChange} className="md:col-span-3"/>
-                </SubSection>
-            </Section>
 
 
             {/* Final section */}
@@ -1244,16 +1258,14 @@ const removeMedicationRow = (index: number) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField label="Firma del paciente" name="consent.patientSignature" value={formData.consent.patientSignature} onChange={handleInputChange} />
                     <InputField label="Fecha" name="consent.patientDate" type="date" value={formData.consent.patientDate} onChange={handleInputChange} />
-                    <InputField label="Firma del médico" name="consent.physicianSignature" value={formData.consent.physicianSignature} onChange={handleInputChange} />
-                    <InputField label="Fecha" name="consent.physicianDate" type="date" value={formData.consent.physicianDate} onChange={handleInputChange} />
                 </div>
             </Section>
 
 
-          <div className="mt-10 flex justify-end">
+          <div className="mt-8 sm:mt-10 flex justify-center sm:justify-end">
               <button
                 type="submit"
-                className="px-8 py-3 bg-teal-600 text-white font-bold rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-500/50 transform hover:-translate-y-0.5 transition-all duration-150"
+                className="w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-3 bg-teal-600 text-white font-bold rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-500/50 transform hover:-translate-y-0.5 transition-all duration-150 text-base sm:text-sm"
               >
                 Enviar Cuestionario
               </button>
